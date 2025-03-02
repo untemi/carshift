@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -41,7 +42,8 @@ func POSTuserFinder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	template.UserFinderResults(users, r.FormValue("username"), page).Render(r.Context(), w)
+	hxVars := fmt.Sprintf("{\"username\": \"%s\",\"page\": %d}", r.FormValue("username"), page+1)
+	template.UserFinderResults(users, hxVars).Render(r.Context(), w)
 }
 
 func reTargetAlert(message string, w http.ResponseWriter, r *http.Request) {

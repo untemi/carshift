@@ -9,17 +9,21 @@ templ Profile(u db.User, self bool) {
 	{{ iurl := "https://ui-avatars.com/api/?name=" + u.Firstname + " " + u.Lastname }}
 	{{ logged := ctx.Value("logged").(bool) }}
 	@Base(u.Firstname+" "+u.Lastname, false) {
-		<div class="flex gap-7 px-6 m-auto w-full max-w-7xl min-h-full pt-22">
-			<div class="flex flex-col gap-5 sm:w-4xs lg:w-3xs">
-				<img
-					class="m-auto w-full h-auto rounded-full shadow-lg shadow-info/40"
-					src={ iurl }
-					alt="profile"
-				/>
+		<div class="pt-[64px]"></div>
+		<div class="flex flex-col gap-7 py-6 px-6 m-auto w-full max-w-7xl min-h-full sm:flex-row">
+			<div class="flex flex-col gap-5 w-full sm:w-3xs lg:w-2xs">
+				<div
+					class="overflow-hidden my-1 mx-16 rounded-full sm:my-0 sm:mx-0"
+				>
+					<img
+						width="100%"
+						src={ iurl }
+					/>
+				</div>
 				<div class="flex flex-col gap-2">
 					<div class="text-2xl font-bold truncate">{ u.Firstname + " " + u.Lastname }</div>
 					if self {
-						<a href="/" class="btn btn-sm btn-soft btn-info">Edit</a>
+						<a href="/settings" class="btn btn-sm btn-soft btn-info">Edit</a>
 					}
 					<div>
 						@icoText(u.Username, "user")

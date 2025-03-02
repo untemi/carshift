@@ -1,6 +1,7 @@
 package db
 
 import (
+	"fmt"
 	"log"
 
 	"gorm.io/driver/sqlite"
@@ -12,6 +13,8 @@ var (
 	dbConf *gorm.Config = &gorm.Config{
 		SkipDefaultTransaction: true,
 	}
+
+	ErrNoIdentifier = fmt.Errorf("no Identifier provided")
 )
 
 func Init() error {

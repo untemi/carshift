@@ -7,7 +7,8 @@ import (
 
 templ Settings() {
 	@Base("Settings", false) {
-		<div class="px-5 pt-20" id="settings-tabs">
+		<div class="pt-[64px]"></div>
+		<div class="px-5" id="settings-tabs">
 			<div hx-get="/settings/0" hx-trigger="load" hx-swap="outerHTML" hx-target="this"></div>
 		</div>
 	}

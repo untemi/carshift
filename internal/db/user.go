@@ -1,7 +1,5 @@
 package db
 
-import "github.com/untemi/carshift/internal/misc"
-
 func AddUser(u *User) error {
 	return db.Create(&u).Error
 }
@@ -18,13 +16,14 @@ func (u *User) Fill() error {
 		return db.First(&u, u.ID).Error
 	}
 
-	return misc.ErrNoIdentifier
+	return ErrNoIdentifier
 }
 
 func FetchUsers(query string, limit int, page int) (*[]User, error) {
 	var users *[]User
 	tx := db.Limit(limit).Offset(page * limit)
-	tx.Where("Username LIKE ?", query).Find(&users)
+	tx.Where("Username LIKE ?", query)
+	tx.Find(&users)
 
 	return users, tx.Error
 }

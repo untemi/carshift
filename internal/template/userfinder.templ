@@ -2,7 +2,6 @@ package template
 
 import (
 	"github.com/untemi/carshift/internal/db"
-	"fmt"
 	c "github.com/untemi/carshift/internal/component"
 )
 
@@ -37,7 +36,7 @@ templ UserFinder() {
 	}
 }
 
-templ UserFinderResults(users *[]db.User, query string, page int) {
+templ UserFinderResults(users *[]db.User, hxvars string) {
 	for _, v := range *users {
 		{{ iurl := "https://ui-avatars.com/api/?name=" + v.Firstname + " " + v.Lastname }}
 		{{ plink := templ.URL("/profile/" + v.Username) }}
@@ -58,7 +57,7 @@ templ UserFinderResults(users *[]db.User, query string, page int) {
 	if len(*users)>=10 {
 		<button
 			hx-post="/userfinder"
-			hx-vals={ fmt.Sprintf("{\"username\": \"%s\",\"page\": %d}", query, page+1) }
+			hx-vals={ hxvars }
 			hx-target="this"
 			hx-swap="outerHTML"
 			type="button"
