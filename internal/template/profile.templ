@@ -11,7 +11,7 @@ templ Profile(u db.User, self bool) {
 	@Base(u.Firstname+" "+u.Lastname, false) {
 		<div class="pt-[64px]"></div>
 		<div class="flex flex-col gap-7 py-6 px-6 m-auto w-full max-w-7xl min-h-full sm:flex-row">
-			<div class="flex flex-col gap-5 w-full sm:w-3xs lg:w-2xs">
+			<div class="flex flex-col gap-5 max-w-full sm:min-w-32 sm:max-w-3xs lg:max-w-2xs">
 				<div
 					class="overflow-hidden my-1 mx-16 rounded-full sm:my-0 sm:mx-0"
 				>
@@ -43,7 +43,7 @@ templ Profile(u db.User, self bool) {
 					</div>
 				</div>
 			</div>
-			<div class="flex overflow-hidden flex-col grow card bg-base-200">
+			<div class="flex overflow-hidden flex-col grow card bg-base-200 sm:min-w-lg">
 				if self {
 					<div class="grid grid-cols-2 p-2 w-full bg-base-300">
 						<div class="flex flex-row">
