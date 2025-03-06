@@ -4,12 +4,19 @@ import (
 	"regexp"
 	"strings"
 	"unicode"
+	"unicode/utf8"
 )
 
-var usernamePattern = regexp.MustCompile("^[a-zA-Z0-9_]{4,25}$")
+var usernamePattern = regexp.MustCompile("^[a-zA-Z0-9_]+$")
 
-func ValidateUsername(t string) bool {
-	return usernamePattern.MatchString(t)
+func ValidateUsername(t string, requireLength bool) bool {
+	Length := utf8.RuneCountInString(t)
+	validPattern := usernamePattern.MatchString(t)
+
+	max := Length < 26 || !requireLength
+	min := Length > 3 || !requireLength
+
+	return max && min && validPattern
 }
 
 func ValidateName(t string, IsNullable bool) bool {

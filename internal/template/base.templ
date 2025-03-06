@@ -10,6 +10,7 @@ templ Base(title string, card bool) {
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			<link rel="stylesheet" href="/static/css/output.css"/>
 			<script src="/static/js/htmx.js"></script>
+			<script src="/static/js/htmx-rm.js"></script>
 			<script src="/static/js/pikaday.js"></script>
 			<script src="/static/js/dayjs.js"></script>
 			<script defer src="/static/js/alpine.js"></script>
@@ -29,7 +30,7 @@ templ Base(title string, card bool) {
 				</div>
 			}
 			@component.Footer()
-			<div hx-preserve id="hxtoast" class="transition-none toast"></div>
+			<div hx-ext="remove-me" id="hxtoast" class="toast"></div>
 		</body>
 	</html>
 }

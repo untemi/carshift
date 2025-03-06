@@ -44,7 +44,7 @@ func POSTregister(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Verifying username
-	if !misc.ValidateUsername(username) {
+	if !misc.ValidateUsername(username, true) {
 		template.AlertError("invalid username").Render(r.Context(), w)
 		return
 	}

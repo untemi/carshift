@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/untemi/carshift/internal/db"
+	"github.com/untemi/carshift/internal/misc"
 	"github.com/untemi/carshift/internal/template"
 )
 
@@ -30,6 +31,11 @@ func POSTuserFinder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if !misc.ValidateUsername(query, false) {
+		reTargetAlert("invalid username", w, r)
+		return
+	}
+
 	if pageStr != "" {
 		page, _ = strconv.Atoi(pageStr)
 	}
@@ -48,6 +54,6 @@ func POSTuserFinder(w http.ResponseWriter, r *http.Request) {
 
 func reTargetAlert(message string, w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("HX-Retarget", "#hxtoast")
-	w.Header().Add("HX-Reswap", "innerHTML")
+	w.Header().Add("HX-Reswap", "beforeend")
 	template.AlertError(message).Render(r.Context(), w)
 }
