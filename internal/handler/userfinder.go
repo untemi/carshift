@@ -51,9 +51,3 @@ func POSTuserFinder(w http.ResponseWriter, r *http.Request) {
 	hxVars := fmt.Sprintf("{\"username\": \"%s\",\"page\": %d}", r.FormValue("username"), page+1)
 	template.UserFinderResults(users, hxVars).Render(r.Context(), w)
 }
-
-func reTargetAlert(message string, w http.ResponseWriter, r *http.Request) {
-	w.Header().Add("HX-Retarget", "#hxtoast")
-	w.Header().Add("HX-Reswap", "beforeend")
-	template.AlertError(message).Render(r.Context(), w)
-}

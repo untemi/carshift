@@ -34,48 +34,54 @@ func main() {
 	}
 
 	r := chi.NewRouter()
-	r.Use(gm.Logger, gm.Recoverer, h.SM.LoadAndSave)
+
+	// Global middlewares
+	r.Use(gm.Logger)
+	r.Use(gm.Recoverer)
+	r.Use(h.SM.LoadAndSave)
 
 	// Static and general stuff
 	r.Group(func(r chi.Router) {
 		r.Get("/favicon.ico", view.ServeFavicon)
 	})
 
-	// HTMX thingys
+	// HTMX
 	r.Group(func(r chi.Router) {
 		r.Get("/htmx/alert", h.HtmxAlert)
 	})
 
-	// OUR routes
+	// Public
 	r.Group(func(r chi.Router) {
 		r.Use(m.FetchLogin)
 
 		r.Get("/", h.GEThome)
+		r.Get("/carfinder", h.GETcarFinder)
+		r.Get("/userfinder", h.GETuserFinder)
 		r.Get("/profile/{username}", h.GETprofile)
 
-		r.Get("/carfinder", h.GETcarFinder)
 		r.Post("/carfinder", h.POSTcarFinder)
-
-		r.Get("/userfinder", h.GETuserFinder)
 		r.Post("/userfinder", h.POSTuserFinder)
 	})
 
-	// User routes
+	// Users-only
 	r.Group(func(r chi.Router) {
-		r.Use(m.FetchLogin, m.UserOnly)
+		r.Use(m.FetchLogin)
+		r.Use(m.UserOnly)
 
-		r.Get("/logout", h.EndSession)
 		r.Get("/me", h.GETprofileSelf)
+		r.Get("/logout", h.EndSession)
 		r.Get("/settings", h.GETsettings)
 		r.Get("/settings/{tab}", h.GETsettingsTabs)
 	})
 
-	// Guest routes
+	// Guest-only
 	r.Group(func(r chi.Router) {
-		r.Use(m.FetchLogin, m.GuestOnly)
+		r.Use(m.FetchLogin)
+		r.Use(m.GuestOnly)
 
 		r.Get("/login", h.GETlogin)
 		r.Get("/register", h.GETregister)
+
 		r.Post("/login", h.POSTlogin)
 		r.Post("/register", h.POSTregister)
 	})

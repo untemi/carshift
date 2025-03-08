@@ -34,6 +34,7 @@ templ Profile(u db.User, self bool) {
 							<div
 								hx-get="/htmx/alert?message=Login+required+to+view+contact+info"
 								hx-target="#hxtoast"
+								hx-swap="beforeend"
 								class="cursor-pointer select-none blur-sm w-fit"
 							>
 								@icoText("nice try diddy", "email")

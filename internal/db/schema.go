@@ -24,7 +24,7 @@ type Car struct {
 	Name  string
 	Price float64
 
-	UserID uint
+	UserID int
 	User   User
 
 	CreatedAt time.Time

@@ -5,7 +5,12 @@ import c "github.com/untemi/carshift/internal/component"
 templ Login() {
 	@Base("Login", true) {
 		<h1 class="text-4xl font-bold">Login</h1>
-		<form hx-post="/login" hx-target="#hxtoast" class="grid gap-2">
+		<form
+			hx-post="/login"
+			hx-target="#hxtoast"
+			hx-swap="beforeend"
+			class="grid gap-2"
+		>
 			@c.InputUsername("", true)
 			@c.InputPassword(true)
 			<input type="submit" class="btn btn-primary" value="Login"/>
