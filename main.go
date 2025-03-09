@@ -72,6 +72,8 @@ func main() {
 		r.Get("/logout", h.EndSession)
 		r.Get("/settings", h.GETsettings)
 		r.Get("/settings/{tab}", h.GETsettingsTabs)
+
+		r.Get("/dev/randcar", h.DevAddRandCar)
 	})
 
 	// Guest-only

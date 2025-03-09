@@ -21,7 +21,9 @@ func (u *User) Fill() error {
 
 func FetchUsers(query string, limit int, page int) (*[]User, error) {
 	var users *[]User
+	query = "%" + query + "%"
 	tx := db.Limit(limit).Offset(page * limit)
+
 	tx.Where("Username LIKE ?", query)
 	tx.Find(&users)
 

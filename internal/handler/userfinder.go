@@ -40,7 +40,6 @@ func POSTuserFinder(w http.ResponseWriter, r *http.Request) {
 		page, _ = strconv.Atoi(pageStr)
 	}
 
-	query = "%" + query + "%"
 	users, err := db.FetchUsers(query, 10, page)
 	if err != nil {
 		log.Printf("DB: Error fetching users: %v", err)
@@ -48,6 +47,6 @@ func POSTuserFinder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	hxVars := fmt.Sprintf("{\"username\": \"%s\",\"page\": %d}", r.FormValue("username"), page+1)
+	hxVars := fmt.Sprintf(`{"username": "%s","page": %d}`, query, page+1)
 	template.UserFinderResults(users, hxVars).Render(r.Context(), w)
 }

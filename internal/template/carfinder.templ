@@ -1,6 +1,7 @@
 package template
 
 import "github.com/untemi/carshift/internal/db"
+import "fmt"
 
 templ CarFinder() {
 	@Base("Car Finder", false) {
@@ -9,7 +10,7 @@ templ CarFinder() {
 			hx-post="/carfinder"
 			hx-target="#hx-results"
 			hx-swap="innerHTML"
-			class="flex flex-col p-3 m-3 grow card bg-base-200"
+			class="flex flex-col p-3 m-3 mb-1 grow card bg-base-200"
 		>
 			<div x-init="Pikabo()" class="join join-vertical sm:join-horizontal">
 				<select name="district" class="w-full sm:w-36 sm:rounded-l-full select select-warning">
@@ -40,13 +41,18 @@ templ CarFinder() {
 				/>
 				<div class="w-full">
 					<label class="w-full input join-item">
-						<input autocomplete="off" placeholder="Search" name="message" type="text"/>
+						<input
+							autocomplete="off"
+							placeholder="Search"
+							name="carname"
+							type="text"
+						/>
 					</label>
 				</div>
 				<button class="btn btn-secondary join-item">Search</button>
 			</div>
 		</form>
-		<div id="hx-results"></div>
+		<div class="flex flex-col gap-1 py-2 px-3" id="hx-results"></div>
 		<script>
       function Pikabo() {
         var options = {
@@ -61,8 +67,26 @@ templ CarFinder() {
 	}
 }
 
-templ CarFinderResults(users *[]db.Car) {
-	<div>
-		We poor ok
-	</div>
+templ CarFinderResults(cars *[]db.Car, hxvars string) {
+	for _, v := range *cars {
+		<div class="flex flex-row gap-3 py-3 h-fit btn btn-ghost">
+			<div class="font-bold">{ v.Name }</div>
+			<div class="font-bold">{ fmt.Sprint(v.Price," DH") }</div>
+			<div class="font-bold">{ v.District.Name }</div>
+		</div>
+	}
+	if len(*cars)>=5 {
+		<button
+			hx-post="/carfinder"
+			hx-vals={ hxvars }
+			hx-target="this"
+			hx-swap="outerHTML"
+			type="button"
+			class="btn"
+		>Show more</button>
+	} else {
+		<div class="cursor-default btn btn-ghost">
+			That's it
+		</div>
+	}
 }

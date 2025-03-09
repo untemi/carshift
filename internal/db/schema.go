@@ -27,6 +27,17 @@ type Car struct {
 	UserID int
 	User   User
 
+	DistrictID int
+	District   District
+
+	StartAt time.Time
+	EndAt   time.Time
+
 	CreatedAt time.Time
 	UpdatedAt time.Time
+}
+
+type District struct {
+	ID   int    `gorm:"primaryKey"`
+	Name string `gorm:"index,unique"`
 }

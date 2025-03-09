@@ -24,7 +24,11 @@ func Init() error {
 		return err
 	}
 
-	err = db.AutoMigrate(&User{}, &Car{})
+	err = db.AutoMigrate(
+		&User{},
+		&Car{},
+		&District{},
+	)
 	if err != nil {
 		return err
 	}
