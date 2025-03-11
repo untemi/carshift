@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"log"
 	"net/http"
@@ -15,21 +16,23 @@ import (
 )
 
 func main() {
-	var err error
 	var adr string
+	ctx := context.Background()
 
 	// Flags
 	flag.StringVar(&adr, "a", ":8000", "address")
 	flag.Parse()
 
 	// Setup
-	if err = db.Init(); err != nil {
-		log.Printf("DB: Error fetching user %v", err)
+	closeDB, err := db.Init(ctx)
+	if err != nil {
+		log.Printf("DB: Error initialising database, %v", err)
 		return
 	}
+	defer closeDB()
 
 	if err = h.Init(); err != nil {
-		log.Printf("SM: Error fetching user %v", err)
+		log.Printf("SM: Error initialising session manager, %v", err)
 		return
 	}
 
@@ -42,6 +45,7 @@ func main() {
 
 	// Static and general stuff
 	r.Group(func(r chi.Router) {
+		r.Get("/logout", h.EndSession)
 		r.Get("/favicon.ico", view.ServeFavicon)
 	})
 
@@ -69,7 +73,6 @@ func main() {
 		r.Use(m.UserOnly)
 
 		r.Get("/me", h.GETprofileSelf)
-		r.Get("/logout", h.EndSession)
 		r.Get("/settings", h.GETsettings)
 		r.Get("/settings/{tab}", h.GETsettingsTabs)
 

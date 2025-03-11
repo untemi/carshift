@@ -1,31 +1,48 @@
 package db
 
-func AddUser(u *User) error {
-	return db.Create(&u).Error
+import (
+	"context"
+
+	"github.com/untemi/carshift/internal/db/sqlc"
+)
+
+func RegisterUser(ctx context.Context, u *sqlc.User) (int64, error) {
+	return runner.CreateUser(
+		ctx,
+		sqlc.CreateUserParams{
+			Username:  u.Username,
+			Firstname: u.Firstname,
+			Lastname:  u.Lastname,
+			Passhash:  u.Passhash,
+		})
 }
 
-func IsUserExists(username string) (bool, error) {
-	tx := db.Limit(1).Where("Username = ?", username).Find(&User{})
-	return tx.RowsAffected > 0, tx.Error
+func IsUsernameUsed(ctx context.Context, username string) (bool, error) {
+	e, err := runner.IsUsernameUsed(ctx, username)
+	return e == 1, err
 }
 
-func (u *User) Fill() error {
+func FillUser(ctx context.Context, u *sqlc.User) error {
+	var err error
 	if u.Username != "" {
-		return db.Where("Username = ?", u.Username).First(&u).Error
+		*u, err = runner.FindUserByUsername(ctx, u.Username)
+		return err
 	} else if u.ID != 0 {
-		return db.First(&u, u.ID).Error
+		*u, err = runner.FindUserById(ctx, u.ID)
+		return err
 	}
-
 	return ErrNoIdentifier
 }
 
-func FetchUsers(query string, limit int, page int) (*[]User, error) {
-	var users *[]User
-	query = "%" + query + "%"
-	tx := db.Limit(limit).Offset(page * limit)
+func FetchUsers(ctx context.Context, query string, limit int64, page int64) (*[]sqlc.User, error) {
+	users, err := runner.QueryUsers(
+		ctx,
+		sqlc.QueryUsersParams{
+			Username: "%" + query + "%",
+			Limit:    limit,
+			Offset:   page,
+		},
+	)
 
-	tx.Where("Username LIKE ?", query)
-	tx.Find(&users)
-
-	return users, tx.Error
+	return &users, err
 }

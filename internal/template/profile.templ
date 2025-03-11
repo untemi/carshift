@@ -1,11 +1,11 @@
 package template
 
 import (
-	"github.com/untemi/carshift/internal/db"
 	c "github.com/untemi/carshift/internal/component"
+	"github.com/untemi/carshift/internal/db/sqlc"
 )
 
-templ Profile(u db.User, self bool) {
+templ Profile(u sqlc.User, self bool) {
 	{{ iurl := "https://ui-avatars.com/api/?name=" + u.Firstname + " " + u.Lastname }}
 	{{ logged := ctx.Value("logged").(bool) }}
 	@Base(u.Firstname+" "+u.Lastname, false) {

@@ -16,7 +16,7 @@ func GETuserFinder(w http.ResponseWriter, r *http.Request) {
 }
 
 func POSTuserFinder(w http.ResponseWriter, r *http.Request) {
-	page := 0
+	var page int64
 	err := r.ParseForm()
 	if err != nil {
 		reTargetAlert("bad data", w, r)
@@ -37,10 +37,10 @@ func POSTuserFinder(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if pageStr != "" {
-		page, _ = strconv.Atoi(pageStr)
+		page, _ = strconv.ParseInt(pageStr, 10, 64)
 	}
 
-	users, err := db.FetchUsers(query, 10, page)
+	users, err := db.FetchUsers(r.Context(), query, 10, page)
 	if err != nil {
 		log.Printf("DB: Error fetching users: %v", err)
 		reTargetAlert("internal error", w, r)

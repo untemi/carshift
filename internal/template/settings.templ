@@ -1,8 +1,8 @@
 package template
 
 import (
-	db "github.com/untemi/carshift/internal/db"
 	c "github.com/untemi/carshift/internal/component"
+	"github.com/untemi/carshift/internal/db/sqlc"
 )
 
 templ Settings() {
@@ -15,7 +15,7 @@ templ Settings() {
 }
 
 templ SettingsAccount() {
-	{{ u := ctx.Value("userdata").(db.User) }}
+	{{ u := ctx.Value("userdata").(sqlc.User) }}
 	<form method="post" class="grid gap-3 w-full sm:w-xs">
 		<div>
 			<div class="mb-1 text-sm">Username</div>

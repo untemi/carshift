@@ -1,38 +1,39 @@
 package db
 
 import (
+	"context"
+	"database/sql"
+	_ "embed"
 	"fmt"
-	"log"
 
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
+	"github.com/untemi/carshift/internal/db/sqlc"
 )
 
-var (
-	db     *gorm.DB
-	dbConf *gorm.Config = &gorm.Config{
-		SkipDefaultTransaction: true,
-	}
+type closeFunc func() error
 
+//go:embed schema.sql
+var tbs string
+
+var (
+	runner          *sqlc.Queries
 	ErrNoIdentifier = fmt.Errorf("no Identifier provided")
 )
 
-func Init() error {
-	var err error
-	db, err = gorm.Open(sqlite.Open("app.db"), dbConf)
+func Init(ctx context.Context) (closeFunc, error) {
+	conn, err := sql.Open("sqlite3", "app.db")
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	err = db.AutoMigrate(
-		&User{},
-		&Car{},
-		&District{},
-	)
-	if err != nil {
-		return err
-	}
+	// if err := setup(ctx, conn); err != nil {
+	// 	return nil, err
+	// }
 
-	log.Println("DB: up and running")
-	return nil
+	runner = sqlc.New(conn)
+	return conn.Close, nil
+}
+
+func setup(ctx context.Context, conn *sql.DB) error {
+	_, err := conn.ExecContext(ctx, tbs)
+	return err
 }

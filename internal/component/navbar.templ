@@ -1,6 +1,6 @@
 package component
 
-import "github.com/untemi/carshift/internal/db"
+import "github.com/untemi/carshift/internal/db/sqlc"
 
 templ Navbar() {
 	{{ l := ctx.Value("logged").(bool) }}
@@ -13,7 +13,7 @@ templ Navbar() {
 		</div>
 		<div class="flex-none">
 			if l {
-				{{ u := ctx.Value("userdata").(db.User) }}
+				{{ u := ctx.Value("userdata").(sqlc.User) }}
 				{{ iurl := "https://ui-avatars.com/api/?name=" + u.Firstname + " " + u.Lastname }}
 				<div class="dropdown dropdown-end">
 					<img tabindex="0" role="button" class="m-1 btn btn-circle" src={ iurl } alt="profile"/>

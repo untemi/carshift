@@ -1,8 +1,8 @@
 package template
 
 import (
-	"github.com/untemi/carshift/internal/db"
 	c "github.com/untemi/carshift/internal/component"
+	"github.com/untemi/carshift/internal/db/sqlc"
 )
 
 templ UserFinder() {
@@ -36,7 +36,7 @@ templ UserFinder() {
 	}
 }
 
-templ UserFinderResults(users *[]db.User, hxvars string) {
+templ UserFinderResults(users *[]sqlc.User, hxvars string) {
 	for _, v := range *users {
 		{{ iurl := "https://ui-avatars.com/api/?name=" + v.Firstname + " " + v.Lastname }}
 		{{ plink := templ.URL("/profile/" + v.Username) }}

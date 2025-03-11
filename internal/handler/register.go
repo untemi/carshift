@@ -8,6 +8,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/untemi/carshift/internal/db"
+	"github.com/untemi/carshift/internal/db/sqlc"
 	"github.com/untemi/carshift/internal/misc"
 	"github.com/untemi/carshift/internal/template"
 )
@@ -70,7 +71,7 @@ func POSTregister(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Cheching if username is used
-	e, err := db.IsUserExists(username)
+	e, err := db.IsUsernameUsed(r.Context(), username)
 	if err != nil {
 		log.Printf("DB: Error checking user existence: %v", err)
 		template.AlertError("internal error").Render(r.Context(), w)
@@ -90,14 +91,14 @@ func POSTregister(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Registering the user
-	u := db.User{
+	u := sqlc.User{
 		Username:  username,
 		Firstname: firstname,
 		Lastname:  lastname,
 		Passhash:  string(hashedPassword),
 	}
 
-	err = db.AddUser(&u)
+	userId, err := db.RegisterUser(r.Context(), &u)
 	if err != nil {
 		log.Printf("DB: Error creating user: %v", err)
 		template.AlertError("internal error").Render(r.Context(), w)
@@ -112,6 +113,6 @@ func POSTregister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	SM.Put(r.Context(), "userId", u.ID)
+	SM.Put(r.Context(), "userId", userId)
 	w.Header().Set("HX-Redirect", "/")
 }

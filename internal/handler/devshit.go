@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/untemi/carshift/internal/db"
+	"github.com/untemi/carshift/internal/db/sqlc"
 	"github.com/untemi/carshift/internal/misc"
 )
 
@@ -20,16 +21,16 @@ func DevAddRandCar(w http.ResponseWriter, r *http.Request) {
 		endDate = misc.RanDate()
 	}
 
-	car := db.Car{
+	car := sqlc.Car{
 		Name:       misc.RandString(10, 18),
 		Price:      float64(rand.Int31n(200) + 200),
-		UserID:     1,
-		DistrictID: rand.Intn(7) + 1,
-		StartAt:    startDate,
-		EndAt:      endDate,
+		OwnerID:    1,
+		DistrictID: rand.Int63n(7) + 1,
+		StartAt:    misc.TimeToNull(startDate),
+		EndAt:      misc.TimeToNull(endDate),
 	}
 
-	db.AddCar(&car)
+	db.AddCar(r.Context(), &car)
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(car)

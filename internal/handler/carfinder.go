@@ -18,7 +18,7 @@ func GETcarFinder(w http.ResponseWriter, r *http.Request) {
 }
 
 func POSTcarFinder(w http.ResponseWriter, r *http.Request) {
-	var page int
+	var page int64
 	var startDate time.Time
 	var endDate time.Time
 
@@ -56,10 +56,10 @@ func POSTcarFinder(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if pageStr != "" {
-		page, _ = strconv.Atoi(pageStr)
+		page, _ = strconv.ParseInt(pageStr, 10, 64)
 	}
 
-	cars, err := db.FetchCars(district, startDate, endDate, query, 5, page)
+	cars, err := db.FetchCars(r.Context(), district, startDate, endDate, query, 5, page)
 	if err != nil {
 		log.Printf("DB: Error fetching cars: %v", err)
 		reTargetAlert("internal error", w, r)

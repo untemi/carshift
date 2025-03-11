@@ -8,6 +8,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/untemi/carshift/internal/db"
+	"github.com/untemi/carshift/internal/db/sqlc"
 	"github.com/untemi/carshift/internal/template"
 )
 
@@ -38,7 +39,7 @@ func POSTlogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Cheching if username exists
-	e, err := db.IsUserExists(username)
+	e, err := db.IsUsernameUsed(r.Context(), username)
 	if err != nil {
 		log.Printf("DB: Error checking user existence: %v", err)
 		template.AlertError("internal error").Render(r.Context(), w)
@@ -50,8 +51,8 @@ func POSTlogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Fetching user
-	u := db.User{Username: username}
-	err = u.Fill()
+	u := sqlc.User{Username: username}
+	err = db.FillUser(r.Context(), &u)
 	if err != nil {
 		log.Printf("SERVER: Error fetching user %v", err)
 		template.AlertError("internal error").Render(r.Context(), w)

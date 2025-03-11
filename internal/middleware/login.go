@@ -2,12 +2,12 @@ package middleware
 
 import (
 	"context"
+	"database/sql"
 	"log"
 	"net/http"
 
-	"gorm.io/gorm"
-
 	"github.com/untemi/carshift/internal/db"
+	"github.com/untemi/carshift/internal/db/sqlc"
 	"github.com/untemi/carshift/internal/handler"
 )
 
@@ -17,11 +17,11 @@ func FetchLogin(next http.Handler) http.Handler {
 		ctx := context.WithValue(r.Context(), "logged", l)
 
 		if l {
-			u := db.User{ID: handler.SM.GetInt(r.Context(), "userId")}
+			u := sqlc.User{ID: handler.SM.GetInt64(r.Context(), "userId")}
 
-			err := u.Fill()
+			err := db.FillUser(r.Context(), &u)
 			if err != nil {
-				if err == gorm.ErrRecordNotFound {
+				if err == sql.ErrNoRows {
 					http.Redirect(w, r, "/logout", http.StatusSeeOther)
 					return
 				}
