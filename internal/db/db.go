@@ -6,7 +6,9 @@ import (
 	_ "embed"
 	"fmt"
 
-	"github.com/untemi/carshift/internal/db/sqlc"
+	_ "github.com/mattn/go-sqlite3"
+
+	. "github.com/untemi/carshift/internal/db/sqlc"
 )
 
 type closeFunc func() error
@@ -15,7 +17,7 @@ type closeFunc func() error
 var tbs string
 
 var (
-	runner          *sqlc.Queries
+	runner          *Queries
 	ErrNoIdentifier = fmt.Errorf("no Identifier provided")
 )
 
@@ -29,7 +31,7 @@ func Init(ctx context.Context) (closeFunc, error) {
 	// 	return nil, err
 	// }
 
-	runner = sqlc.New(conn)
+	runner = New(conn)
 	return conn.Close, nil
 }
 

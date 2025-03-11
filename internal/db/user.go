@@ -3,13 +3,13 @@ package db
 import (
 	"context"
 
-	"github.com/untemi/carshift/internal/db/sqlc"
+	. "github.com/untemi/carshift/internal/db/sqlc"
 )
 
-func RegisterUser(ctx context.Context, u *sqlc.User) (int64, error) {
+func RegisterUser(ctx context.Context, u *User) (int64, error) {
 	return runner.CreateUser(
 		ctx,
-		sqlc.CreateUserParams{
+		CreateUserParams{
 			Username:  u.Username,
 			Firstname: u.Firstname,
 			Lastname:  u.Lastname,
@@ -22,7 +22,7 @@ func IsUsernameUsed(ctx context.Context, username string) (bool, error) {
 	return e == 1, err
 }
 
-func FillUser(ctx context.Context, u *sqlc.User) error {
+func FillUser(ctx context.Context, u *User) error {
 	var err error
 	if u.Username != "" {
 		*u, err = runner.FindUserByUsername(ctx, u.Username)
@@ -34,10 +34,10 @@ func FillUser(ctx context.Context, u *sqlc.User) error {
 	return ErrNoIdentifier
 }
 
-func FetchUsers(ctx context.Context, query string, limit int64, page int64) (*[]sqlc.User, error) {
+func FetchUsers(ctx context.Context, query string, limit int64, page int64) (*[]User, error) {
 	users, err := runner.QueryUsers(
 		ctx,
-		sqlc.QueryUsersParams{
+		QueryUsersParams{
 			Username: "%" + query + "%",
 			Limit:    limit,
 			Offset:   page,

@@ -4,14 +4,14 @@ import (
 	"context"
 	"time"
 
-	"github.com/untemi/carshift/internal/db/sqlc"
-	"github.com/untemi/carshift/internal/misc"
+	. "github.com/untemi/carshift/internal/db/sqlc"
+	. "github.com/untemi/carshift/internal/misc"
 )
 
-func AddCar(ctx context.Context, c *sqlc.Car) (int64, error) {
+func AddCar(ctx context.Context, c *Car) (int64, error) {
 	return runner.CreateCar(
 		ctx,
-		sqlc.CreateCarParams{
+		CreateCarParams{
 			Name:       c.Name,
 			Price:      c.Price,
 			StartAt:    c.StartAt,
@@ -30,14 +30,14 @@ func FetchCars(
 	query string,
 	limit int64,
 	page int64,
-) (*[]sqlc.Car, error) {
+) (*[]Car, error) {
 	cars, err := runner.QueryCars(
 		ctx,
-		sqlc.QueryCarsParams{
+		QueryCarsParams{
 			DistrictName: district,
 			Name:         "%" + query + "%",
-			StartAt:      misc.TimeToNull(startDate),
-			EndAt:        misc.TimeToNull(endDate),
+			StartAt:      TimeToNull(startDate),
+			EndAt:        TimeToNull(endDate),
 			Limit:        limit,
 			Offset:       page,
 		})
