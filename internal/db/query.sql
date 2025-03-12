@@ -48,13 +48,6 @@ WHERE c.name LIKE ?1
 LIMIT ?4 OFFSET ?5;
 
 --    Districts     --
--- name: SetupDistricts :exec
-INSERT INTO districts ( name )
-VALUES 
-	("Aïn Chock"),
-	("Aïn Sebaâ"),
-	("Al Fida"),
-	("Ben M'Sick"),
-	("Hay Hassani"),
-	("Moulay Rachid"),
-	("Sidi Bernoussi")
+-- name: CreateDistrict :exec
+INSERT INTO districts (name) 
+  VALUES (?); 

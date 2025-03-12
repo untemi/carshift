@@ -37,8 +37,22 @@ func Setup(ctx context.Context) error {
 	}
 	_, err = conn.ExecContext(ctx, tbs)
 
+	districts := []string{
+		"Aïn Chock",
+		"Aïn Sebaâ",
+		"Al Fida",
+		"Ben M'Sick",
+		"Hay Hassani",
+		"Moulay Rachid",
+		"Sidi Bernoussi",
+	}
+
 	tmpRunner := New(conn)
-	tmpRunner.SetupDistricts(ctx)
+	for _, v := range districts {
+		if err := tmpRunner.CreateDistrict(ctx, v); err != nil {
+			return err
+		}
+	}
 
 	conn.Close()
 	return err
