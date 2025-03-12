@@ -1,6 +1,8 @@
 package misc
 
 import (
+	"errors"
+	"os"
 	"regexp"
 	"strings"
 	"unicode"
@@ -55,4 +57,9 @@ func ValidatePassword(t string) bool {
 	}
 
 	return hasDigit && hasLower && hasUpper
+}
+
+func IsFileExists(filepath string) bool {
+	_, err := os.Stat(filepath)
+	return !errors.Is(err, os.ErrNotExist)
 }
