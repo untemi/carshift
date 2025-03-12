@@ -8,3 +8,4 @@ package-lock.json
 *_templ.txt
 *_templ.go
 .up
+internal/db/sqlc/
