@@ -7,3 +7,4 @@ package-lock.json
 *.db
 *_templ.txt
 *_templ.go
+.up

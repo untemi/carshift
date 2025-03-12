@@ -9,9 +9,8 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 
 	. "github.com/untemi/carshift/internal/db/sqlc"
+	"github.com/untemi/carshift/internal/misc"
 )
-
-type closeFunc func() error
 
 //go:embed schema.sql
 var tbs string
@@ -21,21 +20,23 @@ var (
 	ErrNoIdentifier = fmt.Errorf("no Identifier provided")
 )
 
-func Init(ctx context.Context) (closeFunc, error) {
+func Init(ctx context.Context) (misc.DBClose, error) {
 	conn, err := sql.Open("sqlite3", "app.db")
 	if err != nil {
 		return nil, err
 	}
 
-	// if err := setup(ctx, conn); err != nil {
-	// 	return nil, err
-	// }
-
 	runner = New(conn)
 	return conn.Close, nil
 }
 
-func setup(ctx context.Context, conn *sql.DB) error {
-	_, err := conn.ExecContext(ctx, tbs)
+func Setup(ctx context.Context) error {
+	conn, err := sql.Open("sqlite3", "app.db")
+	if err != nil {
+		return err
+	}
+	_, err = conn.ExecContext(ctx, tbs)
+
+	conn.Close()
 	return err
 }

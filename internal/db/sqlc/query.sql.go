@@ -133,7 +133,7 @@ func (q *Queries) IsUsernameUsed(ctx context.Context, username string) (int64, e
 
 const queryCars = `-- name: QueryCars :many
 SELECT c.id, c.name, c.price, c.start_at, c.end_at, c.owner_id, c.district_id FROM cars c
-  JOIN districts d ON c.district_id = d.id
+  INNER JOIN districts d ON c.district_id = d.id
 WHERE c.name LIKE ?1
   AND d.name = ?6
   AND (

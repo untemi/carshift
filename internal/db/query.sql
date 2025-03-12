@@ -38,7 +38,7 @@ RETURNING id;
 
 -- name: QueryCars :many
 SELECT c.* FROM cars c
-  JOIN districts d ON c.district_id = d.id
+  INNER JOIN districts d ON c.district_id = d.id
 WHERE c.name LIKE ?1
   AND d.name = @district_name
   AND (
