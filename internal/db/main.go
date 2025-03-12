@@ -37,6 +37,9 @@ func Setup(ctx context.Context) error {
 	}
 	_, err = conn.ExecContext(ctx, tbs)
 
+	tmpRunner := New(conn)
+	tmpRunner.SetupDistricts(ctx)
+
 	conn.Close()
 	return err
 }
