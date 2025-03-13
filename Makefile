@@ -13,7 +13,7 @@ build/templ:
 	go run github.com/a-h/templ/cmd/templ@latest generate
 
 build/sqlc:
-	go run github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+	go run github.com/sqlc-dev/sqlc/cmd/sqlc@latest generate
 
 build/tailwindcss:
 	npm install
