@@ -7,7 +7,7 @@ live/tailwind:
 	npx @tailwindcss/cli -i ./static/css/input.css -o ./static/css/output.css -w -m >/dev/null 2>&1
 
 live: 
-	make -j5 live/server live/tailwind
+	make -j2 live/tailwind live/server
 
 
 
