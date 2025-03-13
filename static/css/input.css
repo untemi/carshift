@@ -1,4 +1,5 @@
 @plugin "daisyui" {
   themes: forest --default;
 }
+@import "tailwindcss-animated";
 @import "tailwindcss" source("../../internal/**/*.{templ,html}");

@@ -3,9 +3,16 @@ tmp_dir = "tmp"
 
 [build]
 bin = "./tmp/main serve"
-cmd = "templ generate && sqlc generate && go build -o ./tmp/main ."
+cmd = "sqlc generate && templ generate && go build -o ./tmp/main ."
 delay = 1000
-exclude_dir = ["static", "tmp", "vendor", "node_modules", "build"]
+exclude_dir = [
+  "static",
+  "tmp",
+  "vendor",
+  "node_modules",
+  "build",
+  "internal/db/sqlc",
+]
 exclude_file = []
 exclude_regex = [".*_templ.go"]
 exclude_unchanged = false

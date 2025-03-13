@@ -69,7 +69,7 @@ templ CarFinder() {
 
 templ CarFinderResults(cars *[]sqlc.Car, hxvars string) {
 	for _, v := range *cars {
-		<div class="flex flex-row gap-3 py-3 h-fit btn btn-ghost">
+		<div class="flex flex-row gap-3 py-3 h-fit btn btn-ghost animate-fade-right animate-duration-500">
 			<div class="font-bold">{ v.Name }</div>
 			<div class="font-bold">{ fmt.Sprint(v.Price," DH") }</div>
 			<div class="font-bold">district :)</div>
