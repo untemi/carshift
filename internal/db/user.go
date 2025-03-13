@@ -46,3 +46,18 @@ func FetchUsers(ctx context.Context, query string, limit int64, page int64) (*[]
 
 	return &users, err
 }
+
+func UpdateUser(ctx context.Context, u *User) error {
+	return runner.UpdateUser(
+		ctx,
+		UpdateUserParams{
+			Username:  u.Username,
+			Firstname: u.Firstname,
+			Lastname:  u.Lastname,
+			Passhash:  u.Passhash,
+			Phone:     u.Phone,
+			Email:     u.Email,
+			ID:        u.ID,
+		},
+	)
+}

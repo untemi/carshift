@@ -7,6 +7,16 @@ INSERT INTO users (
 )
 RETURNING id;
 
+-- name: UpdateUser :exec
+UPDATE users 
+SET username = ?,
+    firstname = ?,
+    lastname = ?,
+    passhash = ?,
+    phone = ?,
+    email = ?
+WHERE id = ?;
+
 -- name: IsUsernameUsed :one
 SELECT COUNT(id) FROM users
   WHERE username = ?

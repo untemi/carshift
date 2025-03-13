@@ -57,6 +57,10 @@ func Start(c ServerConfig) {
 		r.Get("/settings", h.GETsettings)
 		r.Get("/settings/{tab}", h.GETsettingsTabs)
 
+		r.Post("/settings/profile", h.POSTsettingsProfile)
+		r.Post("/settings/account", h.POSTsettingsAccount)
+
+		// Dev Shit
 		r.Get("/dev/randcar", h.DevAddRandCar)
 	})
 

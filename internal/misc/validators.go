@@ -2,9 +2,9 @@ package misc
 
 import (
 	"errors"
+	"net/mail"
 	"os"
 	"regexp"
-	"strings"
 	"unicode"
 	"unicode/utf8"
 )
@@ -22,8 +22,8 @@ func ValidateUsername(t string, requireLength bool) bool {
 }
 
 func ValidateName(t string, IsNullable bool) bool {
-	if len(strings.TrimSpace(t)) < 2 {
-		if IsNullable {
+	if utf8.RuneCountInString(t) < 2 {
+		if IsNullable && t == "" {
 			return true
 		}
 		return false
@@ -37,7 +37,7 @@ func ValidateName(t string, IsNullable bool) bool {
 }
 
 func ValidatePassword(t string) bool {
-	if len(t) < 8 {
+	if utf8.RuneCountInString(t) < 8 {
 		return false
 	}
 
@@ -57,6 +57,32 @@ func ValidatePassword(t string) bool {
 	}
 
 	return hasDigit && hasLower && hasUpper
+}
+
+func ValidatePhone(t string) bool {
+	if utf8.RuneCountInString(t) < 10 {
+		return false
+	}
+
+	for _, char := range t {
+		if !unicode.IsNumber(char) {
+			return false
+		}
+	}
+
+	return true
+}
+
+func ValidateEmail(t string) bool {
+	if t == "" {
+		return true
+	}
+
+	if _, err := mail.ParseAddress(t); err != nil {
+		return false
+	}
+
+	return true
 }
 
 func IsFileExists(filepath string) bool {

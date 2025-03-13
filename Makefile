@@ -4,10 +4,12 @@ live/server:
 	go run github.com/air-verse/air@latest
 
 live/tailwind:
-	npx @tailwindcss/cli -i ./static/css/input.css -o ./static/css/output.css --watch -m >/dev/null 2>&1
+	npx @tailwindcss/cli -i ./static/css/input.css -o ./static/css/output.css -w -m >/dev/null 2>&1
 
 live: 
 	make -j5 live/server live/tailwind
+
+
 
 build/templ:
 	go run github.com/a-h/templ/cmd/templ@latest generate

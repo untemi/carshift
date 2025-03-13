@@ -16,7 +16,7 @@ templ Base(title string, card bool) {
 			<script defer src="/static/js/alpine.js"></script>
 			<title>{ title } - CarShift</title>
 		</head>
-		<body hx-boost="true" class="flex flex-col min-h-screen">
+		<body class="flex flex-col min-h-screen">
 			@component.Navbar()
 			if card {
 				<div class="grid sm:flex sm:justify-center sm:items-center sm:shadow-sm grow">

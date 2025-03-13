@@ -5,3 +5,15 @@ templ AlertError(m string) {
 		<span>{ m }</span>
 	</div>
 }
+
+templ AlertSuccess(m string) {
+	<div remove-me="4s" class="select-none alert alert-success alert-soft">
+		<span>{ m }</span>
+	</div>
+}
+
+templ AlertWarning(m string) {
+	<div remove-me="4s" class="select-none alert alert-warning alert-soft">
+		<span>{ m }</span>
+	</div>
+}

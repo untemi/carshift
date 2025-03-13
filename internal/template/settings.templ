@@ -16,18 +16,15 @@ templ Settings() {
 
 templ SettingsAccount() {
 	{{ u := ctx.Value("userdata").(sqlc.User) }}
-	<form method="post" class="grid gap-3 w-full sm:w-xs">
+	<form
+		hx-post="/settings/account"
+		hx-target="#hxtoast"
+		hx-swap="beforeend"
+		class="grid gap-3 w-full sm:w-xs"
+	>
 		<div>
 			<div class="mb-1 text-sm">Username</div>
 			@c.InputUsername(u.Username, false)
-		</div>
-		<div>
-			<div class="mb-1 text-sm">First name</div>
-			@c.InputFirstName(u.Firstname, false)
-		</div>
-		<div>
-			<div class="mb-1 text-sm">Last name</div>
-			@c.InputLastName(u.Lastname, false)
 		</div>
 		<div>
 			<div class="mb-1 text-sm">Email</div>
@@ -37,5 +34,26 @@ templ SettingsAccount() {
 			<div class="mb-1 text-sm">Phone number</div>
 			@c.InputPhone(u.Phone, false)
 		</div>
+		<input type="submit" class="btn btn-primary" value="Save"/>
+	</form>
+}
+
+templ SettingsProfile() {
+	{{ u := ctx.Value("userdata").(sqlc.User) }}
+	<form
+		hx-post="/settings/profile"
+		hx-target="#hxtoast"
+		hx-swap="beforeend"
+		class="grid gap-3 w-full sm:w-xs"
+	>
+		<div>
+			<div class="mb-1 text-sm">First name</div>
+			@c.InputFirstName(u.Firstname, false)
+		</div>
+		<div>
+			<div class="mb-1 text-sm">Last name</div>
+			@c.InputLastName(u.Lastname, false)
+		</div>
+		<input type="submit" class="btn btn-primary" value="Save"/>
 	</form>
 }
