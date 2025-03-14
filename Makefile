@@ -22,7 +22,6 @@ build/tailwindcss:
 	npx @tailwindcss/cli -i ./static/css/input.css -o ./build/static/css/output.css -m
 
 build/go:
-	go mod tidy
 	go build -ldflags "-s -w" -o ./build/carshift main.go
 
 build/mini:
