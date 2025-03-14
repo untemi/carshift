@@ -17,6 +17,8 @@ var tabs = []template.Tab{
 	{Name: "Profile", Content: template.SettingsProfile(), URL: "/settings/1"},
 }
 
+const maxProfileSize = 2 << 20
+
 func GETsettings(w http.ResponseWriter, r *http.Request) {
 	template.Settings().Render(r.Context(), w)
 }
@@ -140,4 +142,8 @@ func POSTsettingsProfile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	template.AlertSuccess("saved").Render(r.Context(), w)
+}
+
+func POSTsettingsUpdatePFP(w http.ResponseWriter, r *http.Request) {
+	template.AlertSuccess("alright we started").Render(r.Context(), w)
 }

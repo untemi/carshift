@@ -40,20 +40,49 @@ templ SettingsAccount() {
 
 templ SettingsProfile() {
 	{{ u := ctx.Value("userdata").(sqlc.User) }}
-	<form
-		hx-post="/settings/profile"
-		hx-target="#hxtoast"
-		hx-swap="beforeend"
-		class="grid gap-3 w-full sm:w-xs"
+	{{ iurl := "https://ui-avatars.com/api/?name=" + u.Firstname + " " + u.Lastname }}
+	<div
+		class="flex flex-col w-full sm:flex-row"
 	>
-		<div>
-			<div class="mb-1 text-sm">First name</div>
-			@c.InputFirstName(u.Firstname, false)
-		</div>
-		<div>
-			<div class="mb-1 text-sm">Last name</div>
-			@c.InputLastName(u.Lastname, false)
-		</div>
-		<input type="submit" class="btn btn-primary" value="Save"/>
-	</form>
+		<form
+			hx-post="/settings/pfp"
+			hx-target="#hxtoast"
+			hx-swap="beforeend"
+			enctype="multipart/form-data"
+			x-data={ "{ imageUrl:'" + iurl + "'}" }
+			class="flex flex-col gap-3"
+		>
+			<div class="w-3xs max-w-3xs avatar">
+				<div class="w-full h-auto bg-white rounded-xl">
+					<img :src="imageUrl"/>
+				</div>
+			</div>
+			<input
+				type="file"
+				accept="image/*"
+				name="profile"
+				@change="imageUrl = URL.createObjectURL($event.target.files[0])"
+				required
+				class="file-input file-input-sm"
+			/>
+			<input type="submit" class="btn btn-info" value="Upload"/>
+		</form>
+		<div class="divider divider-horizontal"></div>
+		<form
+			hx-post="/settings/profile"
+			hx-target="#hxtoast"
+			hx-swap="beforeend"
+			class="flex flex-col gap-3 w-full sm:w-xs"
+		>
+			<div>
+				<div class="mb-1 text-sm">First name</div>
+				@c.InputFirstName(u.Firstname, false)
+			</div>
+			<div>
+				<div class="mb-1 text-sm">Last name</div>
+				@c.InputLastName(u.Lastname, false)
+			</div>
+			<input type="submit" class="btn btn-primary" value="Save"/>
+		</form>
+	</div>
 }

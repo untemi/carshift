@@ -59,6 +59,7 @@ func Start(c ServerConfig) {
 
 		r.Post("/settings/profile", h.POSTsettingsProfile)
 		r.Post("/settings/account", h.POSTsettingsAccount)
+		r.Post("/settings/pfp", h.POSTsettingsUpdatePFP)
 
 		// Dev Shit
 		r.Get("/dev/randcar", h.DevAddRandCar)
