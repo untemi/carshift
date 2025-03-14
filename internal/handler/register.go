@@ -28,6 +28,7 @@ func POSTregister(w http.ResponseWriter, r *http.Request) {
 	// DPS parses
 	err := r.ParseForm()
 	if err != nil {
+		log.Printf("SERVER: Error parsing form : %v", err)
 		template.AlertError("bad data").Render(r.Context(), w)
 		return
 	}

@@ -1,9 +1,9 @@
 --    Users     --
 -- name: CreateUser :one
 INSERT INTO users (
-  username, firstname, lastname, passhash, phone, email 
+   username, firstname, lastname, pfp_name, passhash, phone, email 
 ) VALUES (
-  ?, ?, ?, ?, ?, ?
+  ?, ?, ?, ?, ?, ?, ?
 )
 RETURNING id;
 
@@ -12,6 +12,7 @@ UPDATE users
 SET username = ?,
     firstname = ?,
     lastname = ?,
+    pfp_name = ?,
     passhash = ?,
     phone = ?,
     email = ?

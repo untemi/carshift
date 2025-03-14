@@ -3,6 +3,7 @@ package template
 import (
 	c "github.com/untemi/carshift/internal/component"
 	"github.com/untemi/carshift/internal/db/sqlc"
+	"github.com/untemi/carshift/internal/component"
 )
 
 templ UserFinder() {
@@ -37,9 +38,9 @@ templ UserFinder() {
 }
 
 templ UserFinderResults(users *[]sqlc.User, hxvars string) {
-	for _, v := range *users {
-		{{ iurl := "https://ui-avatars.com/api/?name=" + v.Firstname + " " + v.Lastname }}
-		{{ plink := templ.URL("/profile/" + v.Username) }}
+	for _, u := range *users {
+		{{ iurl := component.ProfilePicture(&u) }}
+		{{ plink := templ.URL("/profile/" + u.Username) }}
 		<a href={ plink } class="flex flex-row gap-3 py-3 h-fit btn btn-ghost animate-fade-right animate-duration-500">
 			<div class="avatar">
 				<div class="w-12 h-12 mask mask-squircle">
@@ -49,8 +50,8 @@ templ UserFinderResults(users *[]sqlc.User, hxvars string) {
 				</div>
 			</div>
 			<div class="text-left grow">
-				<div class="font-bold">{ v.Firstname + " " + v.Lastname }</div>
-				<div class="text-sm opacity-50">{ v.Username }</div>
+				<div class="font-bold">{ u.Firstname + " " + u.Lastname }</div>
+				<div class="text-sm opacity-50">{ u.Username }</div>
 			</div>
 		</a>
 	}

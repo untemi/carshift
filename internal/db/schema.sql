@@ -3,6 +3,7 @@ CREATE TABLE users (
   username TEXT NOT NULL,
   firstname TEXT NOT NULL,
   lastname TEXT NOT NULL,
+  pfp_name TEXT NOT NULL,
   passhash TEXT NOT NULL,
   phone TEXT NOT NULL,
   email TEXT NOT NULL

@@ -55,6 +55,7 @@ func UpdateUser(ctx context.Context, u *User) error {
 			Firstname: u.Firstname,
 			Lastname:  u.Lastname,
 			Passhash:  u.Passhash,
+			PfpName:   u.PfpName,
 			Phone:     u.Phone,
 			Email:     u.Email,
 			ID:        u.ID,

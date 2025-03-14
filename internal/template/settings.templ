@@ -3,6 +3,7 @@ package template
 import (
 	c "github.com/untemi/carshift/internal/component"
 	"github.com/untemi/carshift/internal/db/sqlc"
+	"github.com/untemi/carshift/internal/component"
 )
 
 templ Settings() {
@@ -40,7 +41,7 @@ templ SettingsAccount() {
 
 templ SettingsProfile() {
 	{{ u := ctx.Value("userdata").(sqlc.User) }}
-	{{ iurl := "https://ui-avatars.com/api/?name=" + u.Firstname + " " + u.Lastname }}
+	{{ iurl := component.ProfilePicture(&u) }}
 	<div
 		class="flex flex-col w-full sm:flex-row"
 	>
@@ -50,6 +51,7 @@ templ SettingsProfile() {
 			hx-swap="beforeend"
 			enctype="multipart/form-data"
 			x-data={ "{ imageUrl:'" + iurl + "'}" }
+			hx-disabled-elt="#filesubmit"
 			class="flex flex-col gap-3"
 		>
 			<div class="w-3xs max-w-3xs avatar">
@@ -59,13 +61,13 @@ templ SettingsProfile() {
 			</div>
 			<input
 				type="file"
-				accept="image/*"
+				accept="image/jpeg, image/png, image/gif"
 				name="profile"
 				@change="imageUrl = URL.createObjectURL($event.target.files[0])"
 				required
 				class="file-input file-input-sm"
 			/>
-			<input type="submit" class="btn btn-info" value="Upload"/>
+			<input id="filesubmit" type="submit" class="btn btn-info" value="Upload"/>
 		</form>
 		<div class="divider divider-horizontal"></div>
 		<form

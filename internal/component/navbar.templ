@@ -14,7 +14,7 @@ templ Navbar() {
 		<div class="flex-none">
 			if l {
 				{{ u := ctx.Value("userdata").(sqlc.User) }}
-				{{ iurl := "https://ui-avatars.com/api/?name=" + u.Firstname + " " + u.Lastname }}
+				{{ iurl := ProfilePicture(&u) }}
 				<div class="dropdown dropdown-end">
 					<img tabindex="0" role="button" class="m-1 btn btn-circle" src={ iurl } alt="profile"/>
 					<ul tabindex="0" class="p-2 w-52 shadow-sm dropdown-content menu bg-base-200 rounded-box z-1">

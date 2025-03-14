@@ -3,10 +3,11 @@ package template
 import (
 	c "github.com/untemi/carshift/internal/component"
 	"github.com/untemi/carshift/internal/db/sqlc"
+	"github.com/untemi/carshift/internal/component"
 )
 
 templ Profile(u sqlc.User, self bool) {
-	{{ iurl := "https://ui-avatars.com/api/?name=" + u.Firstname + " " + u.Lastname }}
+	{{ iurl := component.ProfilePicture(&u) }}
 	{{ logged := ctx.Value("logged").(bool) }}
 	@Base(u.Firstname+" "+u.Lastname, false) {
 		<div class="pt-[64px]"></div>

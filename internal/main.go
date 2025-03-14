@@ -79,6 +79,7 @@ func Start(c ServerConfig) {
 
 	// Files serving
 	view.FileServer(r, "/static", "static")
+	view.FileServer(r, "/pictures", "pictures")
 
 	server := http.Server{
 		Addr:    c.Address,

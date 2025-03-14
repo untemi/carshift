@@ -1,10 +1,16 @@
 package handler
 
 import (
+	"errors"
+	"fmt"
+	"io"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
+
+	"github.com/google/uuid"
 
 	"github.com/untemi/carshift/internal/db"
 	"github.com/untemi/carshift/internal/db/sqlc"
@@ -12,12 +18,19 @@ import (
 	"github.com/untemi/carshift/internal/template"
 )
 
-var tabs = []template.Tab{
-	{Name: "Account", Content: template.SettingsAccount(), URL: "/settings/0"},
-	{Name: "Profile", Content: template.SettingsProfile(), URL: "/settings/1"},
-}
+const maxPfpSize = 5 << 20
 
-const maxProfileSize = 2 << 20
+var (
+	tabs = []template.Tab{
+		{Name: "Profile", Content: template.SettingsProfile(), URL: "/settings/0"},
+		{Name: "Account", Content: template.SettingsAccount(), URL: "/settings/1"},
+	}
+	validPfpTypes = map[string]bool{
+		"image/jpeg": true,
+		"image/png":  true,
+		"image/gif":  true,
+	}
+)
 
 func GETsettings(w http.ResponseWriter, r *http.Request) {
 	template.Settings().Render(r.Context(), w)
@@ -48,7 +61,14 @@ func POSTsettingsAccount(w http.ResponseWriter, r *http.Request) {
 	}
 	ou := u
 
-	r.ParseForm()
+	// DPS parses
+	err := r.ParseForm()
+	if err != nil {
+		log.Printf("SERVER: Error parsing form : %v", err)
+		template.AlertError("bad data").Render(r.Context(), w)
+		return
+	}
+
 	username := strings.TrimSpace(r.FormValue("username"))
 	email := strings.TrimSpace(r.FormValue("email"))
 	phone := strings.TrimSpace(r.FormValue("phone"))
@@ -68,6 +88,7 @@ func POSTsettingsAccount(w http.ResponseWriter, r *http.Request) {
 	// Verifying email
 	if !misc.ValidateEmail(email) {
 		template.AlertError("invalid email").Render(r.Context(), w)
+		return
 	}
 
 	// Cheching if username is used
@@ -94,7 +115,7 @@ func POSTsettingsAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := db.UpdateUser(r.Context(), &u)
+	err = db.UpdateUser(r.Context(), &u)
 	if err != nil {
 		log.Printf("DB: Error updating user: %v", err)
 		template.AlertError("internal error").Render(r.Context(), w)
@@ -112,7 +133,14 @@ func POSTsettingsProfile(w http.ResponseWriter, r *http.Request) {
 	}
 	ou := u
 
-	r.ParseForm()
+	// DPS parses
+	err := r.ParseForm()
+	if err != nil {
+		log.Printf("SERVER: Error parsing form : %v", err)
+		template.AlertError("bad data").Render(r.Context(), w)
+		return
+	}
+
 	firstname := strings.TrimSpace(r.FormValue("firstname"))
 	lastname := strings.TrimSpace(r.FormValue("lastname"))
 
@@ -134,7 +162,7 @@ func POSTsettingsProfile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := db.UpdateUser(r.Context(), &u)
+	err = db.UpdateUser(r.Context(), &u)
 	if err != nil {
 		log.Printf("DB: Error updating user: %v", err)
 		template.AlertError("internal error").Render(r.Context(), w)
@@ -145,5 +173,87 @@ func POSTsettingsProfile(w http.ResponseWriter, r *http.Request) {
 }
 
 func POSTsettingsUpdatePFP(w http.ResponseWriter, r *http.Request) {
-	template.AlertSuccess("alright we started").Render(r.Context(), w)
+	// limit body size
+	r.Body = http.MaxBytesReader(w, r.Body, maxPfpSize)
+	err := r.ParseMultipartForm(maxPfpSize)
+	if err != nil {
+		template.AlertError("5MB is the max").Render(r.Context(), w)
+		return
+	}
+
+	// fetching user from ctx
+	u, ok := r.Context().Value("userdata").(sqlc.User)
+	if !ok {
+		template.AlertError("internal error").Render(r.Context(), w)
+		return
+	}
+
+	// taking the file reader
+	fileReader, fileHeader, err := r.FormFile("profile")
+	if err != nil {
+		template.AlertError("bad data").Render(r.Context(), w)
+		return
+	}
+	defer fileReader.Close()
+
+	// reading the first 512 bytes for verifying MIME
+	buf := make([]byte, 512)
+	_, err = fileReader.Read(buf)
+	if err != nil {
+		template.AlertError("bad data").Render(r.Context(), w)
+		return
+	}
+	fileType := http.DetectContentType(buf)
+
+	// reader reset
+	fileReader.Seek(0, io.SeekStart)
+
+	// verifying MIME type
+	if !validPfpTypes[fileType] {
+		template.AlertError("not valid MIME type").Render(r.Context(), w)
+		return
+	}
+
+	// reading the whole file
+	fileBytes, err := io.ReadAll(fileReader)
+	if err != nil {
+		template.AlertError("bad data").Render(r.Context(), w)
+		return
+	}
+
+	// making the file name
+	fileSplit := strings.Split(fileHeader.Filename, ".")
+	fileExtention := fileSplit[len(fileSplit)-1]
+	filename := fmt.Sprintf("pfp_%s.%s", uuid.New().String(), fileExtention)
+
+	// writing the file to disk
+	err = os.WriteFile(fmt.Sprintf("pictures/pfp/%s", filename), fileBytes, 0644)
+	if err != nil {
+		log.Printf("SERVER: Error saving file : %v", err)
+		template.AlertError("internal error").Render(r.Context(), w)
+		return
+	}
+
+	// removing the old file
+	if u.PfpName != "" && !strings.Contains(u.PfpName, "/") {
+		err = os.Remove(fmt.Sprintf("pictures/pfp/%s", u.PfpName))
+		if err != nil {
+			if !errors.Is(err, os.ErrNotExist) {
+				log.Printf("SERVER: Error removing file : %v", err)
+				template.AlertError("internal error").Render(r.Context(), w)
+				return
+			}
+		}
+	}
+
+	// saving the name to db
+	u.PfpName = filename
+	err = db.UpdateUser(r.Context(), &u)
+	if err != nil {
+		log.Printf("DB: Error updating user: %v", err)
+		template.AlertError("internal error").Render(r.Context(), w)
+		return
+	}
+
+	template.AlertSuccess("saved").Render(r.Context(), w)
 }
