@@ -8,3 +8,4 @@ package-lock.json
 *_templ.go
 .up
 internal/db/sqlc/
+pictures/
