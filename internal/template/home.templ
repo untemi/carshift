@@ -2,6 +2,41 @@ package template
 
 templ Home() {
 	@Base("Home", false) {
+		<div class="pt-[64px]"></div>
+		<!-- main slogan + car finder -->
+		<div class="grid grid-cols-3 h-96 bg-base-200 overflow-clip">
+			<div class="flex col-span-2 items-center cursor-default">
+				<div class="ml-20 text-5xl font-bold mt-[-2rem] animate-fade-right">
+					<div>
+						<span class="underline underline-offset-2 text-warning">Shift</span> Your Ride
+					</div>
+					<div class="underline decoration-wavy text-error">Anytime</div>
+				</div>
+			</div>
+			<div class="flex justify-center items-center shadow-lg cursor-default shadow-secondary/50 bg-secondary text-secondary-content animate-fade-left">
+				<div>GO FIGURE</div>
+			</div>
+		</div>
+		<!-- Seperator  -->
+		<div class="flex justify-center items-center h-40">
+			<div class="text-4xl font-bold animate-flip-up">
+				bruh chkon 3raf
+			</div>
+		</div>
+		<!-- user finder -->
+		<div class="grid grid-cols-3 h-96 bg-base-200 overflow-clip">
+			<div class="flex justify-center items-center shadow-lg cursor-default shadow-secondary/50 bg-info text-info-content animate-fade-right">
+				<div>GO FIGURE</div>
+			</div>
+			<div class="flex col-span-2 items-center cursor-default">
+				<div class="ml-20 text-5xl font-bold mt-[-2rem] animate-fade-left">
+					<div>
+						<span class="text-success">Contact</span> Our Amazing
+					</div>
+					<div class="underline underline-offset-4 text-accent">Dealers</div>
+				</div>
+			</div>
+		</div>
 		<div class="flex flex-col items-center pt-20">
 			<h1 class="text-6xl animate-flip-up">WOW SITE</h1>
 			<a href="/userfinder" class="text-2xl link">user finder</a>
