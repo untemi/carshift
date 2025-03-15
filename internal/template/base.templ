@@ -17,7 +17,7 @@ templ Base(title string, card bool) {
 			<title>{ title } - CarShift</title>
 		</head>
 		<body hx-indicator=".loading-bar" hx-boost="true" class="flex flex-col min-h-screen">
-			<div class="fixed top-0 left-0 z-50 w-full opacity-0 from-primary/0 to-secondary loading-bar h-[3px] bg-linear-65"></div>
+			<div class="fixed top-0 left-0 z-50 w-full bg-gradient-to-r opacity-0 loading-bar h-[3px] from-primary/10 via-secondary to-accent/10"></div>
 			@component.Navbar()
 			if card {
 				<div class="grid sm:flex sm:justify-center sm:items-center sm:shadow-sm grow">
