@@ -30,3 +30,12 @@
     opacity: 1;
   }
 }
+
+.decoration-wavy {
+  text-decoration-style: wavy;
+
+  /* Firefox-specific fix */
+  @supports (-moz-appearance: none) {
+    text-decoration-thickness: 2px;
+  }
+}
