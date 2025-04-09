@@ -84,7 +84,7 @@ func POSTregister(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Hashing password
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.MinCost)
 	if err != nil {
 		log.Printf("SERVER: Error hashing password: %v", err)
 		template.AlertError("internal error").Render(r.Context(), w)
